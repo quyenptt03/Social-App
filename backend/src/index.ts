@@ -55,15 +55,28 @@ app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {
-    await connectDB(process.env.DB_URI);
-    app.listen(port, () => {
-      console.log(`Server is listening at port ${port}`);
-    });
+    // Check if we're running in Vercel (serverless environment)
+    const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+    
+    if (!isServerless) {
+      // Traditional server startup
+      await connectDB(process.env.DB_URI);
+      app.listen(port, () => {
+        console.log(`Server is listening at port ${port}`);
+      });
+    } else {
+      // Serverless environment - just initialize connection config
+      console.log("Running in serverless environment");
+      await connectDB(process.env.DB_URI);
+    }
   } catch (error) {
-    console.log(error);
+    console.log("Server startup error:", error);
   }
 };
 
-start();
+// Only start the server if not in serverless environment
+if (!process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  start();
+}
 
 export default app;

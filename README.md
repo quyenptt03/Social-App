@@ -45,7 +45,7 @@ A full-stack social media application built with Next.js and Node.js, featuring 
 ## 📁 Project Structure
 
 ```
-acua_inc/
+social_app/
 ├── backend/                 # Node.js Express API
 │   ├── src/
 │   │   ├── controllers/     # Route controllers
@@ -105,7 +105,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 
    ```bash
    git clone <repository-url>
-   cd acua_inc
+   cd social_app
    ```
 
 2. **Backend Setup**
