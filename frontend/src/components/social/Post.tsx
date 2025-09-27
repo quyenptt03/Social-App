@@ -94,6 +94,11 @@ const Post: React.FC<PostProps> = ({ post, onPostUpdate, onPostDelete }) => {
   };
 
   const handleToggleComments = () => {
+    // Don't allow comment interactions on deleted posts
+    if (post.is_deleted) {
+      return;
+    }
+
     setIsCommentsExpanded(!isCommentsExpanded);
 
     if (!isCommentsExpanded && comments.length === 0) {
@@ -363,7 +368,17 @@ const Post: React.FC<PostProps> = ({ post, onPostUpdate, onPostDelete }) => {
       <div className="flex items-center space-x-4 pt-2 border-t border-gray-100">
         <button
           onClick={handleToggleComments}
-          className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+          disabled={post.is_deleted}
+          className={`flex items-center space-x-2 transition-colors ${
+            post.is_deleted
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-gray-600 hover:text-blue-600"
+          }`}
+          title={
+            post.is_deleted
+              ? "Comments are disabled for deleted posts"
+              : "View comments"
+          }
         >
           <svg
             className="w-5 h-5"
@@ -382,11 +397,26 @@ const Post: React.FC<PostProps> = ({ post, onPostUpdate, onPostDelete }) => {
             {post.comment_count || 0}{" "}
             {(post.comment_count || 0) === 1 ? "comment" : "comments"}
           </span>
+          {post.is_deleted && (
+            <svg
+              className="w-4 h-4 text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
+              />
+            </svg>
+          )}
         </button>
       </div>
 
       {/* Comment Section */}
-      {isCommentsExpanded && (
+      {isCommentsExpanded && !post.is_deleted && (
         <CommentSection
           postId={post.id}
           comments={comments}
@@ -397,6 +427,30 @@ const Post: React.FC<PostProps> = ({ post, onPostUpdate, onPostDelete }) => {
           onCommentUpdated={handleCommentUpdated}
           onLoadMore={handleLoadMoreComments}
         />
+      )}
+
+      {/* Deleted Post Comment Notice */}
+      {isCommentsExpanded && post.is_deleted && (
+        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+          <div className="flex items-center space-x-2 text-gray-600">
+            <svg
+              className="w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span className="text-sm">
+              Comments are not available for deleted posts.
+            </span>
+          </div>
+        </div>
       )}
 
       {/* Delete Confirmation Modal */}

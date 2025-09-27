@@ -123,9 +123,15 @@ const Timeline: React.FC = () => {
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto p-4">
-        <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading timeline...</p>
+        <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-2xl p-8 text-center">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+            <div className="absolute inset-0 rounded-full bg-blue-50 animate-ping opacity-20"></div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Loading Your Timeline
+          </h3>
+          <p className="text-gray-600">Fetching the latest posts for you...</p>
         </div>
       </div>
     );
@@ -134,11 +140,29 @@ const Timeline: React.FC = () => {
   if (error) {
     return (
       <div className="max-w-2xl mx-auto p-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-          <p className="text-red-600 mb-4">{error}</p>
+        <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-2xl p-6 text-center shadow-lg">
+          <div className="text-red-500 mb-4">
+            <svg
+              className="w-16 h-16 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-red-800 mb-2">
+            Oops! Something went wrong
+          </h3>
+          <p className="text-red-600 mb-6">{error}</p>
           <button
             onClick={handleRefresh}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 transform hover:scale-105 font-medium shadow-lg"
           >
             Try Again
           </button>
@@ -180,22 +204,56 @@ const Timeline: React.FC = () => {
 
       {/* Search Results Header */}
       {isSearchMode && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+        <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-2xl p-6 mb-6 shadow-lg">
           <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-medium text-blue-900">
-                Search Results for "{currentSearchTerm}"
-              </h3>
-              <p className="text-sm text-blue-700">
-                {searchResults.length}{" "}
-                {searchResults.length === 1 ? "post" : "posts"} found
-              </p>
+            <div className="flex items-center space-x-3">
+              <div className="text-blue-600">
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900">
+                  Search Results for "{currentSearchTerm}"
+                </h3>
+                <p className="text-sm text-blue-700 flex items-center space-x-1">
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                    {searchResults.length}
+                  </span>
+                  <span>
+                    {searchResults.length === 1 ? "post" : "posts"} found
+                  </span>
+                </p>
+              </div>
             </div>
             <button
               onClick={handleClearSearch}
-              className="text-blue-600 hover:text-blue-800 font-medium text-sm"
+              className="flex items-center space-x-2 bg-white text-blue-600 hover:text-blue-800 font-medium text-sm px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-blue-200"
             >
-              Back to Timeline
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              <span>Back to Timeline</span>
             </button>
           </div>
         </div>
@@ -251,17 +309,38 @@ const Timeline: React.FC = () => {
             disabled={loadingMore}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
-            {loadingMore ? (
-              <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                <span>Loading...</span>
-              </div>
-            ) : (
-              "Load More Posts"
-            )}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="relative flex items-center space-x-3">
+              {loadingMore ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                  <span>Loading more posts...</span>
+                </>
+              ) : (
+                <>
+                  <span>Load More Posts</span>
+                  <svg
+                    className="w-5 h-5 transform group-hover:translate-y-0.5 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                    />
+                  </svg>
+                </>
+              )}
+            </div>
           </button>
         </div>
       )}
+
+      {/* Bottom spacing */}
+      <div className="h-8"></div>
     </div>
   );
 };
