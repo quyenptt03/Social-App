@@ -1,7 +1,7 @@
 import axios, { CreateAxiosDefaults } from "axios";
 import Cookies from "js-cookie";
 
-export const URL = process.env.API_URL || "http://localhost:5000";
+export const URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const baseConfig: CreateAxiosDefaults = {
   baseURL: URL,
   headers: {

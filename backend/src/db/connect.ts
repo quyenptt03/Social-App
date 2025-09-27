@@ -4,15 +4,29 @@ let pool: Pool | null = null;
 
 const connectDB = (connectionString: string) => {
   try {
+    console.log(
+      "Connection string format check:",
+      connectionString
+        ? "✓ Connection string provided"
+        : "✗ No connection string"
+    );
+
+    if (!connectionString) {
+      throw new Error("Database connection string is required");
+    }
+
     pool = new Pool({
       connectionString: connectionString,
       ssl:
         process.env.NODE_ENV === "production"
           ? { rejectUnauthorized: false }
           : false,
+      // Add connection timeout and retry settings
+      connectionTimeoutMillis: 10000,
+      idleTimeoutMillis: 30000,
+      max: 20,
     });
 
-    // Test the connection
     return pool
       .connect()
       .then((client) => {
@@ -22,6 +36,7 @@ const connectDB = (connectionString: string) => {
       })
       .catch((err) => {
         console.error("PostgreSQL connection error:", err);
+
         throw err;
       });
   } catch (err) {
