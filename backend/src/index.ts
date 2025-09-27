@@ -31,10 +31,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(cookieParser(process.env.JWT_SECRET));
 
-// Configure CORS to reduce preflight requests
+// Configure CORS to allow all origins
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
