@@ -41,8 +41,7 @@ function LoginForm() {
       {signIn.error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-600">
-            {signIn.error.message ||
-              "Login failed. Please check your credentials."}
+            Login failed. Please check your credentials.
           </p>
         </div>
       )}
