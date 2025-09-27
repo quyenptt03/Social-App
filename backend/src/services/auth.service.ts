@@ -362,3 +362,6 @@ class AuthService {
 }
 
 export default AuthService;
+export function login(loginCredentials: { email: string; password: string }) {
+  throw new Error("Function not implemented.");
+}
